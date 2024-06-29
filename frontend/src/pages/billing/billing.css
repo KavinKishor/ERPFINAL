@@ -1,0 +1,53 @@
+.bill_page{
+    background: #c50b0b;
+    width: 1000px;
+    height: 100vh;
+    /* margin-left: 100px; */
+}
+.print-content{
+    width: 1120px;
+    height: 100vh;
+    overflow: auto;}
+.title{
+    display: flex;
+    justify-content: center;
+    color: darkcyan;
+    margin: 20px;
+}
+.number_date{
+   margin-left: 450px;
+}
+.table_bill{
+    width: 900px;
+}
+table,
+thead,
+tr,
+tbody,
+th,
+td {
+  text-align: center;
+}
+.style{
+    outline: none;
+    border: none;
+}
+
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    .print-content, .print-content * {
+      visibility: visible;
+    }
+    .print-content {
+      position: relative;
+    }
+    .btn,.atn_btn,.cus_sec{
+        visibility: hidden;
+    }
+    .print-content{
+        
+     width: 900px;
+    }
+  }

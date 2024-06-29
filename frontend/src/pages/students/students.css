@@ -1,0 +1,44 @@
+.form_center{
+    display:block;
+    width:100vw;
+    height:100vh;
+    margin-left:50px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    
+}
+.btn1{
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+.btn-1{
+    
+    margin: 0px 80px ;
+    width: 150px;
+    height: 70px;
+}
+.view_student{
+    display: block;
+    width: 1080px;
+    margin-left:50px;
+    height: 100vh;
+    overflow-y: scroll; 
+}
+.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: darkcyan;
+    margin: 20px;
+}
+.button-submit{
+   
+    width:970px;    
+}
+.inputform{
+    width: 800px;
+}
+.table-bordered{
+overflow-y: scroll;
+}

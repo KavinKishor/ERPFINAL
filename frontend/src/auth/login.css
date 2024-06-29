@@ -1,0 +1,11 @@
+.page-login{
+    color: rgb(245, 245, 245);
+    background-image: url("../assets/pexels-tyler-lastovich-997443.jpg");
+    background-repeat: no-repeat;
+    background-size: 100vw 100vh;
+     /* background-image: linear-gradient(to bottom right, rgb(226, 44, 129), rgb(236, 225, 160)) */
+}
+.log-form{
+    background: rgba(41, 38, 38, 0.178);
+    backdrop-filter: saturate(50%) blur(1px);
+}

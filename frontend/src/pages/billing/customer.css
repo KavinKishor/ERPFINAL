@@ -1,0 +1,38 @@
+.customer{
+    background: #f5f5f5;
+    width: 1000px;
+    padding: 10px;
+    margin-left: 100px;
+}
+.title{
+    display: flex;
+    justify-content: center;
+    color: darkcyan;
+    margin: 20px;
+}
+.btn_customer{
+    justify-content: center;
+    margin: 10px  ;
+}
+.btn_container{
+    text-align: center;
+}
+.view_container{
+    background: #f5f5f5;
+    width: 1000px;
+    padding: 10px;
+    margin-left: 100px;
+    
+}
+.action_btns{
+    display: flex;
+
+}
+.border{
+    border: none;
+    outline: none;
+    
+}
+.colors{
+    color: cadetblue;
+}

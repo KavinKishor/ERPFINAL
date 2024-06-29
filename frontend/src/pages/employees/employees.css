@@ -1,0 +1,29 @@
+.form_center{
+    display:block;
+    width:1000px;
+    height: 100vh;
+    margin-left:100px;
+}
+.btn1{
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+.btn-1{
+    
+    margin: 0px 80px ;
+    width: 150px;
+    height: 70px;
+}
+.colors{
+    color: cadetblue;
+}
+.tablespace{
+    overflow: auto;
+}
+.inputform{
+    width: 800px;
+}
+.button-submit{
+    width:970px;    
+}
