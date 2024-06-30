@@ -42,3 +42,27 @@
 .table-bordered{
 overflow-y: scroll;
 }
+.img-edit{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+table,thead,tr,th,tbody,td{
+    border: 0.5px solid rgb(109, 109, 109);
+}
+td{
+    padding: 5px;
+    width: auto;
+}
+th{
+    padding: 5px;
+}
+
+  table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Light gray background for even rows */
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White background for odd rows */
+  }
+  

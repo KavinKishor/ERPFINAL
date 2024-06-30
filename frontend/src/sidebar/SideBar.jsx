@@ -91,7 +91,7 @@ const SideBar = ({ children }) => {
         <div className="sidebar">
           <div className="top_section">
               {isOpen && (
-                <h1 className="logo" ><img src={img}/> KITKAT</h1>
+                <h1 className="logo" ><img className="image" src={img}/> KITKAT</h1>
               )}
 
             <div className="bars">

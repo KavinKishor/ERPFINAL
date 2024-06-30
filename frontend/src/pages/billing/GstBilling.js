@@ -74,6 +74,11 @@ const GstBilling = () => {
     setFirstCustomer(selectedCustomer);
   };
 
+  const currentDate = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
   return (
     <div className='print-content'>
       <div className='d-flex flex-column align-items-center justify-content-center w-100'>
@@ -89,7 +94,8 @@ const GstBilling = () => {
             </div>
             <div className='number_date'>
               <p><span className='fw-bold'>Invoice Number:&nbsp;</span><span className="current-date">{state.invoiceNumber}</span></p>
-              <p><span className="fw-bold">Current Date:&nbsp;</span><span className='current-date'>{new Date().toLocaleDateString()}</span></p>
+              <p><span className="fw-bold">Current Date:&nbsp;</span><span className='current-date'>{currentDate}</span></p>
+              {/* <p><span className="fw-bold">Current Date:&nbsp;</span><span className='current-date'>{new Date().toLocaleDateString()}</span></p> */}
             </div>
           </section>
           <hr />

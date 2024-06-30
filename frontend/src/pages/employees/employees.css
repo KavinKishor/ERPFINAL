@@ -27,3 +27,25 @@
 .button-submit{
     width:970px;    
 }
+table{
+    overflow: auto;
+}
+table,thead,tr,th,tbody,td{
+    border: 0.1px solid rgb(151, 148, 148);
+    
+}
+td{
+    padding: 10px;
+    width: auto;
+}
+th{
+    padding: 5px;
+}
+
+  table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Light gray background for even rows */
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* White background for odd rows */
+  }
+  

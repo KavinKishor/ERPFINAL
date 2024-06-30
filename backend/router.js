@@ -55,8 +55,25 @@ router.post("/create_students",upload.single("image"),async(req,res)=>{
      res.status(500)
     } 
 })
+
+router.put("/updatestudent_info/:id",upload.single("image"),async(req,res)=>{
+    try{
+        const {totalfee,result,FeePaid,GraduatedDate,InsitituteOFStudied,TotalMarks,GraduationDate,EducationInsititute,isUnMarried,isMarried,isFemale,isMale,ContactNumber,Address,EducationalQualification,BloodGroup,FatherName,StudentLastName,StudentFirstName}=req.body
+
+        const imageUrl = req.file ? req.file.filename : req.body.imageUrl;
+
+        const updated=await item.findByIdAndUpdate(req.params.id,{totalfee,result,FeePaid,GraduatedDate,InsitituteOFStudied,TotalMarks,GraduationDate,EducationInsititute,isUnMarried,isMarried,isFemale,isMale,ContactNumber,Address,EducationalQualification,BloodGroup,FatherName,StudentLastName,StudentFirstName,imageUrl},{imageUrl},{new:true})
+
+        if (!updated) {
+            return res.status(404).json({message:"update error"})            
+        } res.json(updated)
+        
+    } catch(error){
+        res.status(500).json({error:error.message})
+    }
+})
+
 router.get("/getstudents_info",getStu) 
-router.put("/updatestudent_info/:id",updateStu)
 router.delete("/deletestudent_info/:id",deleteStu)
 
 
@@ -83,8 +100,24 @@ await empnewItem.save()
     }
 })
 
+router.put("/updateemployee_info/:id",upload.single("image"),async(req,res)=>{
+    try {
+const {Experience,Dateofrelieveing,Dateofjoining,Salary,isUnMarried,isMarried,isFemale,isMale,ContactNumber,Address,EducationalQualification,Emailid,Dateofbirth,BloodGroup,FatherName,EmployeeLastName,EmployeeFirstName}  = req.body
+
+const imageUrl = req.file ? req.file.filename : req.body.imageUrl;
+
+const updatedEmp=await empItems.findByIdAndUpdate(req.params.id,{Experience,Dateofrelieveing,Dateofjoining,Salary,isUnMarried,isMarried,isFemale,isMale,ContactNumber,Address,EducationalQualification,Emailid,Dateofbirth,BloodGroup,FatherName,EmployeeLastName,EmployeeFirstName,imageUrl},{imageUrl},{new:true})
+
+if(!updatedEmp){
+    res.status(400).json({message:"update failled"})
+}res.json(updatedEmp)
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
+})
+
 router.get("/getemployee_info",getEpm)
-router.put("/updateemployee_info/:id",putEmp)
+// router.put("/updateemployee_info/:id",putEmp)
 router.delete("/deleteemployee_info/:id",deleteEmp)
 
 module.exports=router

@@ -14,7 +14,7 @@
     place-items: center;
   }
   .sidebar{
-    background: #008170;
+    background: #092635;
     color: #ffffff;
     height:100vh;
     
@@ -28,10 +28,14 @@
   }
   .logo {
     font-size: 18px;
-    line-height: 10px;
-    margin-top: 10px;
+    line-height: 5px;
+    margin-top: 15px;
+  }
+  .image{
+    width: 30px;
   }
   .bars {
+    margin-left: 5px;
     width:20px;
   }
 
@@ -53,7 +57,7 @@
   .link:hover {
     color: #ffff;
     border-right: 4px solid #140101;
-    background: #232527;
+    background: #DC5F00;
     transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
   }
   .active {
