@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { DeleteStudent, GetStudent, UpdateStudent } from '../../URL/url';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';
-import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
-import './students.css';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { DeleteStudent, UpdateStudent } from "../../URL/url";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { toast } from "react-toastify";
+import Image from "react-bootstrap/Image";
+import "./students.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
   const [editingStudentId, setEditingStudentId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading,setloading] = useState(false)
   const recordsPerPage = 5;
   const firstIndex = (currentPage - 1) * recordsPerPage;
   const lastIndex = Math.min(firstIndex + recordsPerPage, allstudatas.length);
   const currentItem = allstudatas.slice(firstIndex, lastIndex);
   const nthpage = Math.ceil(allstudatas.length / recordsPerPage);
-
+//pageination
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -36,32 +36,112 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
     }
   };
 
-  const handleEdit = (studentId) => {
-    setEditingStudentId(studentId);
-  };
 
-  const handleDelete = (studentId) => {
-    axios
-      .delete(`${DeleteStudent}/${studentId}`)
-      .then((res) => {
-        setAllstudatas((prevStuData) => prevStuData.filter((student) => student._id !== studentId));
-        toast.success('Student deleted');
-        fetchStudents();
-      })
-      .catch((error) => {
-        console.error('Error deleting student:', error);
-        toast.error('Failed to delete student');
-      });
-  };
+
+  //API
+  
+const handleEdit = (studentId) => {
+  setEditingStudentId(studentId);
+};
+
+const handleImageChange = (e, studentId) => {
+  const file = e.target.files[0];
+  setAllstudatas((prevStuData) =>
+    prevStuData.map((student) =>
+      student._id === studentId ? { ...student, newImage: file } : student
+    )
+  );
+};
 
   const handleInputChange = (e, studentId, field) => {
     const updatedValue = e.target.value;
     setAllstudatas((prevStuData) =>
       prevStuData.map((student) =>
-        student._id === studentId ? { ...student, [field]: updatedValue } : student
+        student._id === studentId
+          ? { ...student, [field]: updatedValue }
+          : student
       )
     );
   };
+
+
+  const handleSave = async (studentId, e) => {
+    e.preventDefault();
+
+    // Find the student object using the studentId
+    const editedStudent = allstudatas.find(
+      (student) => student._id === studentId
+    );
+
+    console.log("Image URL:", editedStudent.imageUrl);
+    console.log("New Image:", editedStudent.newImage);
+
+    setEditingStudentId(null);
+    setloading(true);
+
+    // Prepare FormData
+    const formData = new FormData();
+    Object.keys(editedStudent).forEach((key) => {
+      if (key !== "newImage") {
+        formData.append(key, editedStudent[key]);
+      }
+    });
+
+    // Check if new image is added
+    if (editedStudent.newImage) {
+      formData.append("image", editedStudent.newImage);
+    }
+
+    try {
+      // Send updated data to the backend
+      const response = await axios.put(
+        `${UpdateStudent}/${studentId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Update the state or refetch students after successful save
+      fetchStudents();
+      toast.success("Student updated successfully");
+
+      console.log(response);
+    } catch (error) {
+      console.error("Error updating student:", error);
+      toast.error("Failed to update student");
+    } finally {
+      setloading(false);
+    }
+  };
+
+  
+  const handleDelete = (studentId) => {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    };
+    axios
+      .delete(`${DeleteStudent}/${studentId}`, config)
+      .then((res) => {
+        setAllstudatas((prevStuData) =>
+          prevStuData.filter((student) => student._id !== studentId)
+        );
+        toast.success("Student deleted");
+        fetchStudents();
+      })
+      .catch((error) => {
+        console.error("Error deleting student:", error);
+        toast.error("Failed to delete student");
+      });
+  };
+  // date formate update
+
 
   const handleDateChange = (date, studentId, field) => {
     setAllstudatas((prevStuData) =>
@@ -70,53 +150,10 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
       )
     );
   };
-  
-//update to server
-  const handleSave = (studentId) => {
-    setEditingStudentId(null);
-    const editedStudent = allstudatas.find((student) => student._id === studentId);
-  
-    const formData = new FormData();
-    Object.keys(editedStudent).forEach((key) => {
-      if (key !== 'newImage') {
-        formData.append(key, editedStudent[key]);
-      }
-    });
-  
-    if (editedStudent.newImage) {
-      formData.append('image', editedStudent.newImage);
-    }
-  
-    axios
-      .put(`${UpdateStudent}/${studentId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(() => {
-        fetchStudents();
-        toast.success('Student updated successfully');
-      })
-      .catch((error) => {
-        console.error('Error updating student:', error);
-        toast.error('Failed to update student');
-      });
-  };
-  
-// date formate update
-  const formatDate = (date) => {
-    return date ? format(new Date(date), 'dd/MM/yyyy', { locale: ptBR }) : '-';
-  };
-  //image update
-  const handleImageChange = (e, studentId) => {
-    const file = e.target.files[0];
-    setAllstudatas((prevStuData) =>
-      prevStuData.map((student) =>
-        student._id === studentId ? { ...student, newImage: file } : student
-      )
-    );
-  };
 
+  const formatDate = (date) => {
+    return date ? format(new Date(date), "dd/MM/yyyy", { locale: ptBR }) : "-";
+  };
 
 
 
@@ -130,8 +167,8 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
         <table className="table_border">
           <thead className="table_top">
             <tr>
-              <th style={{ outline: 'none' }}>SNO</th>
-              <th style={{ outline: 'none' }}>First Name</th>
+              <th style={{ outline: "none" }}>SNO</th>
+              <th style={{ outline: "none" }}>First Name</th>
               <th className="p-3">Last Name</th>
               <th>Father Name</th>
               <th>Blood Group</th>
@@ -151,7 +188,7 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody style={{ alignItems: 'center' }}>
+          <tbody style={{ alignItems: "center" }}>
             {currentItem.map((student, index) => (
               <tr key={student._id}>
                 <td>{firstIndex + index + 1}</td>
@@ -160,11 +197,13 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.StudentFirstName}
-                      onChange={(e) => handleInputChange(e, student._id, 'StudentFirstName')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "StudentFirstName")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.StudentFirstName || '-'}</span>
+                    <span>{student.StudentFirstName || "-"}</span>
                   )}
                 </td>
                 <td>
@@ -172,11 +211,13 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.StudentLastName}
-                      onChange={(e) => handleInputChange(e, student._id, 'StudentLastName')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "StudentLastName")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.StudentLastName || '-'}</span>
+                    <span>{student.StudentLastName || "-"}</span>
                   )}
                 </td>
                 <td>
@@ -184,11 +225,13 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.FatherName}
-                      onChange={(e) => handleInputChange(e, student._id, 'FatherName')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "FatherName")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.FatherName || '-'}</span>
+                    <span>{student.FatherName || "-"}</span>
                   )}
                 </td>
                 <td>
@@ -196,25 +239,29 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.BloodGroup}
-                      onChange={(e) => handleInputChange(e, student._id, 'BloodGroup')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "BloodGroup")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.BloodGroup || '-'}</span>
+                    <span>{student.BloodGroup || "-"}</span>
                   )}
                 </td>
-                <td>{student.booleanValue ? 'Female' : 'Male'}</td>
-                <td>{student.booleanValue ? 'Unmarried' : 'Married'}</td>
+                <td>{student.booleanValue ? "Female" : "Male"}</td>
+                <td>{student.booleanValue ? "Unmarried" : "Married"}</td>
                 <td>
                   {editingStudentId === student._id ? (
                     <input
                       type="text"
                       value={student.Address}
-                      onChange={(e) => handleInputChange(e, student._id, 'Address')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "Address")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.Address || '-'}</span>
+                    <span>{student.Address || "-"}</span>
                   )}
                 </td>
                 <td>
@@ -223,12 +270,16 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                       type="text"
                       value={student.EducationalQualification}
                       onChange={(e) =>
-                        handleInputChange(e, student._id, 'EducationalQualification')
+                        handleInputChange(
+                          e,
+                          student._id,
+                          "EducationalQualification"
+                        )
                       }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.EducationalQualification || '-'}</span>
+                    <span>{student.EducationalQualification || "-"}</span>
                   )}
                 </td>
                 <td>
@@ -236,18 +287,26 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.EducationInsititute}
-                      onChange={(e) => handleInputChange(e, student._id, 'EducationInsititute')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "EducationInsititute")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.EducationInsititute || '-'}</span>
+                    <span>{student.EducationInsititute || "-"}</span>
                   )}
                 </td>
                 <td>
                   {editingStudentId === student._id ? (
                     <DatePicker
-                      selected={student.GraduatedDate ? new Date(student.GraduatedDate) : null}
-                      onChange={(date) => handleDateChange(date, student._id, 'GraduatedDate')}
+                      selected={
+                        student.GraduatedDate
+                          ? new Date(student.GraduatedDate)
+                          : null
+                      }
+                      onChange={(date) =>
+                        handleDateChange(date, student._id, "GraduatedDate")
+                      }
                       dateFormat="dd/MM/yyyy"
                       locale={ptBR}
                       className="form-control border"
@@ -261,18 +320,26 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="text"
                       value={student.InsitituteOFStudied}
-                      onChange={(e) => handleInputChange(e, student._id, 'InsitituteOFStudied')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "InsitituteOFStudied")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.InsitituteOFStudied || '-'}</span>
+                    <span>{student.InsitituteOFStudied || "-"}</span>
                   )}
                 </td>
                 <td>
                   {editingStudentId === student._id ? (
                     <DatePicker
-                      selected={student.GraduationDate ? new Date(student.GraduationDate) : null}
-                      onChange={(date) => handleDateChange(date, student._id, 'GraduationDate')}
+                      selected={
+                        student.GraduationDate
+                          ? new Date(student.GraduationDate)
+                          : null
+                      }
+                      onChange={(date) =>
+                        handleDateChange(date, student._id, "GraduationDate")
+                      }
                       dateFormat="dd/MM/yyyy"
                       locale={ptBR}
                       className="form-control border"
@@ -286,47 +353,58 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
                     <input
                       type="number"
                       value={student.TotalMarks}
-                      onChange={(e) => handleInputChange(e, student._id, 'TotalMarks')}
+                      onChange={(e) =>
+                        handleInputChange(e, student._id, "TotalMarks")
+                      }
                       className="form-control border"
                     />
                   ) : (
-                    <span>{student.TotalMarks || '-'}</span>
+                    <span>{student.TotalMarks || "-"}</span>
                   )}
                 </td>
-                <td>{student.totalfee || '-'}</td>
-                <td>{student.FeePaid || '-'}</td>
-                <td>{student.result || '-'}</td>
+                <td>{student.totalfee || "-"}</td>
+                <td>{student.FeePaid || "-"}</td>
+                <td>{student.result || "-"}</td>
                 <td>
-  {editingStudentId === student._id ? (
-    <div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleImageChange(e, student._id)}
-        className="form-control"
-      />
-      <Image
-        src={student.newImage ? URL.createObjectURL(student.newImage) : require(`../../imgs/${student.imageUrl}`)}
-        // roundedCircle
-        alt="photo"
-        width="100px"
-      />
-    </div>
-  ) : (
-     <Image
-     src={require(`../../imgs/${student.imageUrl}`)}
-                      // roundedCircle
+                  {editingStudentId === student._id ? (
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, student._id)}
+                        className="form-control"
+                      />
+                      <Image
+                        src={
+                          student.newImage
+                            ? URL.createObjectURL(student.newImage)
+                            : student.imageUrl
+                            ? require(`../../imgs/${student.imageUrl}`)
+                            : require(`../../imgs/default.jpg`) 
+                        }
+                        alt="photo"
+                        width="100px"
+                        height="100px"
+                      />
+                    </div>
+                  ) : (
+                    <Image
+                      src={
+                        student.imageUrl
+                          ? require(`../../imgs/${student.imageUrl}`)
+                          : require(`../../imgs/default.jpg`) 
+                      }
                       alt="photo"
                       width="100px"
                       height="100px"
                     />
-  )}
-</td>
+                  )}
+                </td>
                 <td className="action_btns">
                   {editingStudentId === student._id ? (
                     <button
                       className="mx-2 btn btn-success"
-                      onClick={() => handleSave(student._id)}
+                      onClick={(e) => handleSave(student._id, e)}
                     >
                       <i className="bi bi-check2-square"></i>
                     </button>
@@ -366,7 +444,7 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
           {Array.from({ length: nthpage }, (_, i) => (
             <li
               key={i}
-              className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}
+              className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
             >
               <a
                 href="#"
@@ -390,4 +468,3 @@ const ViewStudents = ({ allstudatas, fetchStudents, setAllstudatas }) => {
 };
 
 export default ViewStudents;
-

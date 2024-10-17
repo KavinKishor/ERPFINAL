@@ -104,6 +104,7 @@ const SideBar = ({ children }) => {
               if (route.subRoutes) {
                 return (
                   <SidebarMenu
+                  key={route._id}
                     setIsOpen={setIsOpen}
                     route={route}
                     isOpen={isOpen}
@@ -113,16 +114,12 @@ const SideBar = ({ children }) => {
               return (
                 <NavLink
                   to={route.path}
-                  key={index}
+                  key={route.path}
                   className="link"
-                  activeClassName="active" >
-
+                  activeClassName="active"
+                >
                   <div className="icon">{route.icon}</div>
-                    {isOpen && (
-                      <div className="link_text">
-                        {route.name}
-                      </div>
-                    )}
+                  {isOpen && <div className="link_text">{route.name}</div>}
                 </NavLink>
               );
             })}

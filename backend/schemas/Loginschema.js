@@ -8,4 +8,6 @@ const logSchema=mongoose.Schema({
     password:{type:String,
         require:true}
 })
-module.exports=mongoose.model("log_coll",logSchema)
+const LoginSchema =mongoose.model("log_coll",logSchema)
+
+module.exports = LoginSchema

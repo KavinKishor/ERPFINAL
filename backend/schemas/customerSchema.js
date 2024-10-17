@@ -18,4 +18,5 @@ const customerSchema=new mongoose.Schema({
         required:true
     }
 })
-module.exports=mongoose.model("customer_coll",customerSchema)
+const Customer =mongoose.model("customer_coll",customerSchema)
+module.exports = Customer

@@ -103,15 +103,19 @@ const AddStudents = ({  fetchStudents }) => {
     formdata.append("totalfee", totalfee);
     formdata.append("result", result);
     formdata.append("EducationalQualification", EducationalQualification);
-  
+
+  //  for (let [key, value] of formdata.entries()) {
+  //    console.log(key, value); // Ensure image is appended correctly
+  //  }
     try {
       const response = await axios.post(AddStudent, formdata, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       toast.success("Student detail added successfully");
-      navigate("/viewstudents");
+      // navigate("/viewstudents");
       resetForm();
       fetchStudents()
     } catch (error) {
@@ -136,7 +140,7 @@ const AddStudents = ({  fetchStudents }) => {
     settotalfee("");
     setResult("");
     setTotalMarks("");
-    setImageUrl('');
+    setImageUrl("");
     setisMarried(false);
     setIsMale(false);
     setIsFemale(false);
@@ -144,7 +148,7 @@ const AddStudents = ({  fetchStudents }) => {
   };
 
   return (
-    <div className='formspace'>
+    <div className="formspace">
       <form className="form-horizontal form_center" onSubmit={handleSubmit}>
         <div className="btn1">
           <button type="button" className="btn btn-outline-info mt-3 btn-1">
@@ -154,7 +158,10 @@ const AddStudents = ({  fetchStudents }) => {
             </Figure>
           </button>
           <Link to="/viewstudents">
-            <button className="btn btn-outline-warning btn-1 mt-3 " type="button">
+            <button
+              className="btn btn-outline-warning btn-1 mt-3 "
+              type="button"
+            >
               <Figure>
                 <Figure.Image
                   width={20}
@@ -174,7 +181,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-              className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="First Name"
@@ -190,7 +197,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="Last Name"
@@ -206,7 +213,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="Father Name"
@@ -222,7 +229,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="Blood Group"
@@ -238,7 +245,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="Educational qualification"
@@ -254,7 +261,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               placeholder="Address"
@@ -270,7 +277,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="number"
               placeholder="Contact Number"
@@ -299,10 +306,8 @@ const AddStudents = ({  fetchStudents }) => {
             </div>
             <div className="form-check">
               <input
-              
                 className="form-check-input"
                 type="checkbox"
-                
                 value={isFemale}
                 id="defaultCheck1"
                 onChange={() => setIsFemale(!isFemale)}
@@ -319,28 +324,28 @@ const AddStudents = ({  fetchStudents }) => {
             Marital Status
           </Form.Label>
           <Col>
-            <div class="form-check form-check-inline">
+            <div className="form-check form-check-inline">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="inlineRadioOptions1"
                 value={isMarried}
                 onChange={() => setisMarried(!isMarried)}
               />
-              <label class="form-check-label" for="inlineRadio1">
+              <label className="form-check-label" for="inlineRadio1">
                 {" "}
                 Married
               </label>
             </div>
-            <div class="form-check form-check-inline">
+            <div className="form-check form-check-inline">
               <input
-                class="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="inlineRadioOptions2"
                 value={isUnMarried}
                 onChange={() => setIsUnMarried(!isUnMarried)}
               />
-              <label class="form-check-label" for="inlineRadio2">
+              <label className="form-check-label" for="inlineRadio2">
                 {" "}
                 Un-Married
               </label>
@@ -391,7 +396,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="text"
                     placeholder="Studied insititute"
@@ -407,7 +412,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="date"
                     placeholder="Graduated date"
@@ -423,7 +428,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="number"
                     placeholder="Total Markes scored"
@@ -446,7 +451,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="text"
                     placeholder="Insitute"
@@ -462,7 +467,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="date"
                     placeholder="Date of Graduation"
@@ -478,7 +483,7 @@ const AddStudents = ({  fetchStudents }) => {
                 </Form.Label>
                 <Col>
                   <Form.Control
-                  className='inputform'
+                    className="inputform"
                     size="sm"
                     type="number"
                     placeholder="Total markes"
@@ -497,11 +502,12 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="number"
               value={constantValue}
               placeholder="Total Fee"
+              defaultValue
             />
           </Col>
         </Row>
@@ -512,7 +518,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="number"
               value={FeePaid}
@@ -528,7 +534,7 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="text"
               value={result}
@@ -544,23 +550,27 @@ const AddStudents = ({  fetchStudents }) => {
           </Form.Label>
           <Col>
             <Form.Control
-            className='inputform'
+              className="inputform"
               size="sm"
               type="file"
-              accept='image/*'
+              accept="image/*"
               // value={imageUrl}
-              onChange={(e) =>setImageUrl(e.target.files[0])}
+              onChange={(e) => setImageUrl(e.target.files[0])}
               placeholder="Attachments of bills or photo"
             />
           </Col>
-        
         </Row>
         <br />
-          <Button size="sm" className='button-submit' variant="primary" type="submit">
-            Add Studet Detail
-          </Button>
-        <br/>
-        <br/>
+        <Button
+          size="sm"
+          className="button-submit"
+          variant="primary"
+          type="submit"
+        >
+          Add Studet Detail
+        </Button>
+        <br />
+        <br />
       </form>
     </div>
   );

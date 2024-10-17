@@ -42,7 +42,7 @@ function App() {
 
   const fetchStudents = () => {
     axios.get(GetStudent, {
-      headers: {
+      headers: { 
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })

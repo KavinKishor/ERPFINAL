@@ -65,11 +65,12 @@ const navigate=useNavigate()
     formData.append("Experience", Experience);
     formData.append("image", imageUrl);
     try{
-      const response=await axios.post(AddEmployees, formData,{
+      const response = await axios.post(AddEmployees, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      })
+      });
           toast.success("Employee detail added successfully");
           navigate("/viewempolyees");
           resetForm();

@@ -29,18 +29,26 @@ function AddCustomer({fetchCustomers}) {
 //post
  const submitCustomer=(e)=>{
   e.preventDefault()
-  axios.post(AddCustomers,{CustomerName,CustomerAddress,CustomerContact,CustomerGST})
-.then((res)=>
-  {console.log(res.data)
-  toast.success("customer added successfully")
-  setCustomerName("")
-  setCustomerAddress("")
-  setCustomerContact("")
-  setCustomerGST("")
-  fetchCustomers()
-  
-}
-).catch((err)=>(console.log(err)))
+  axios
+    .post(
+      AddCustomers,
+      { CustomerName, CustomerAddress, CustomerContact, CustomerGST },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+      toast.success("customer added successfully");
+      setCustomerName("");
+      setCustomerAddress("");
+      setCustomerContact("");
+      setCustomerGST("");
+      fetchCustomers();
+    })
+    .catch((err) => console.log(err));
 
 }
 
@@ -90,7 +98,15 @@ if(currentPage!==lastPage){
   } 
 
   const updateCustomer=(v)=>{
-      axios.put(`${UpdateCustomers}/${v.id}`,{CustomerName,CustomerAddress,CustomerContact,CustomerGST})
+      axios.put(
+        `${UpdateCustomers}/${v.id}`,
+        { CustomerName, CustomerAddress, CustomerContact, CustomerGST },
+        {
+          headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
    setCustomerName("")
    setCustomerAddress("")
    setCustomerContact("")

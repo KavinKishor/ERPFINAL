@@ -37,7 +37,7 @@ const SidebarMenu = ({ route, isOpen, setIsOpen }) => {
         {isMenuOpen && (
           <div className="menu_container">
             {route.subRoutes.map((subRoute) => (
-                <NavLink to={subRoute.path} className="link">
+                <NavLink to={subRoute.path} key={subRoute.path} className="link">
                   <div className="icon">{subRoute.icon}</div>
                   <div className="link_text">{subRoute.name}</div>
                 </NavLink>

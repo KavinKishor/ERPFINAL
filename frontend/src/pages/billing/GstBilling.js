@@ -65,7 +65,13 @@ const GstBilling = () => {
   const [firstCustomer, setFirstCustomer] = useState(null);
 
   useEffect(() => {
-    axios.get(GetCustomers).then((res) => setCustomers(res.data));
+    axios
+      .get(GetCustomers, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => setCustomers(res.data));
   }, []);
 
   const handleDropdown = (e) => {

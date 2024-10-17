@@ -4,8 +4,7 @@ import { DeleteCustomers, GetCustomers, UpdateCustomers } from "../../URL/url";
 import "./customer.css";
 import { toast } from "react-toastify";
 const ViewCustomer = ({setCustData,cusData,fetchCustomers}) => {
-  //get
-  // const [cusData, setCustData] = useState([]);
+  
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerpage = 5;
@@ -16,15 +15,7 @@ const ViewCustomer = ({setCustData,cusData,fetchCustomers}) => {
   //CRUD
   const [editingCustomerId, setEditingCustomerId] = useState(null);
 
-  //get
-  // useEffect(() => {
-  //   axios
-  //     .get(GetCustomers)
-  //     .then((res) => setCustData(res.data))
-  //     .catch((error) => console.error("Error fetching customers:", error));
-  // }, []);
-  //pagination
-  const handlePage = (pageNumber) => {
+    const handlePage = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
@@ -46,12 +37,18 @@ const ViewCustomer = ({setCustData,cusData,fetchCustomers}) => {
 
   const handleDelete = (customerId) => {
     axios
-      .delete(`${DeleteCustomers}/${customerId}`)
+      .delete(`${DeleteCustomers}/${customerId}`, {
+        headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
-        setCustData((prevCusData)=>prevCusData.filter(customer=>customer._id!==customerId))
-        // window.location.reload();
+        setCustData((prevCusData) =>
+          prevCusData.filter((customer) => customer._id !== customerId)
+        );
+        
         toast.success("Customer deleted");
-        fetchCustomers()
+        fetchCustomers();
       })
       .catch((error) => {
         // Handle error
@@ -77,7 +74,11 @@ const ViewCustomer = ({setCustData,cusData,fetchCustomers}) => {
       (customer) => customer._id === customerId
     );
     axios
-      .put(`${UpdateCustomers}/${customerId}`, editedCustomer)
+      .put(`${UpdateCustomers}/${customerId}`, editedCustomer, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         axios
           .get(GetCustomers)
